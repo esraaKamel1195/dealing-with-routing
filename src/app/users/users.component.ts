@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './users.component.scss'
 })
 export class UsersComponent {
-  users =[
+  users = [
     {
       id:1,
       name:"Abanoub Nabil"

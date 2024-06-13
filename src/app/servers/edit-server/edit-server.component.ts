@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ServersService } from '../servers.service';
 import { IServer } from '../../models/server.model';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-edit-server',
@@ -12,11 +13,14 @@ export class EditServerComponent implements OnInit {
   server?: IServer;
   serverName: string = '';
   serverStatus: string = '';
+  allowEdit: boolean = false;
+  changesSaved: boolean;
 
   constructor(
     private serversService: ServersService,
-    private activatedRoute: ActivatedRoute
-  ) {}
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     console.log('queryParams', this.activatedRoute.queryParams);
@@ -24,6 +28,7 @@ export class EditServerComponent implements OnInit {
 
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       console.log('params', params);
+      this.allowEdit = params['allowEdit'] == '1' ? true : false;
     });
 
     this.activatedRoute.fragment.subscribe((fragment) => {
@@ -43,6 +48,22 @@ export class EditServerComponent implements OnInit {
         name: this.serverName,
         status: this.serverStatus,
       });
+    }
+
+    this.changesSaved = true;
+    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+  }
+
+  canDeactivate(): boolean | Promise<boolean> | Observable<boolean> {
+    if (!this.allowEdit) {
+      return true;
+    }
+
+    if ((this.serverName !== this.server?.name || this.serverStatus !== this.server.status) && !this.changesSaved) {
+      return confirm("Are you sure to discard changes");
+    }
+    else {
+      return false;
     }
   }
 }

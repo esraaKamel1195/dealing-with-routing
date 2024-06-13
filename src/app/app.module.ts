@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { EditServerComponent } from './servers/edit-server/edit-server.component';
 import { IndividualServerComponent } from './servers/individual-server/individual-server.component';
 import { UserComponent } from './users/user/user.component';
+import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { UserComponent } from './users/user/user.component';
     AppRoutingModule,
     FormsModule
   ],
-  providers: [],
+  providers: [CanDeactivateGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
