@@ -3,13 +3,14 @@ import { ServersService } from '../servers.service';
 import { IServer } from '../../models/server.model';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { CanDeactivateGuard } from '../../guards/can-deactivate.guard';
 
 @Component({
   selector: 'app-edit-server',
   templateUrl: './edit-server.component.html',
   styleUrl: './edit-server.component.scss',
 })
-export class EditServerComponent implements OnInit {
+export class EditServerComponent implements OnInit, CanDeactivateGuard {
   server?: IServer;
   serverName: string = '';
   serverStatus: string = '';
@@ -23,27 +24,25 @@ export class EditServerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('queryParams', this.activatedRoute.queryParams);
-    console.log('fragment', this.activatedRoute.fragment);
-
     this.activatedRoute.queryParams.subscribe((params: Params) => {
-      console.log('params', params);
       this.allowEdit = params['allowEdit'] == '1' ? true : false;
     });
 
     this.activatedRoute.fragment.subscribe((fragment) => {
-      console.log('fragment', fragment);
+      // console.log('fragment', fragment);
     });
 
-    this.server = this.serversService.getServerById(1);
-    if (this.server) {
-      this.serverName = this.server?.name;
-      this.serverStatus = this.server?.status;
-    }
+    this.activatedRoute.params.subscribe((params: Params) => {
+      this.server = this.serversService.getServerById(params['id']);
+      if (this.server) {
+        this.serverName = this.server?.name;
+        this.serverStatus = this.server?.status;
+      }
+    });
   }
 
   onUpdateServer() {
-    if (this.server) {
+    if (this.server && this.allowEdit) {
       this.serversService.updateServer(this.server?.id, {
         name: this.serverName,
         status: this.serverStatus,
@@ -55,6 +54,7 @@ export class EditServerComponent implements OnInit {
   }
 
   canDeactivate(): boolean | Promise<boolean> | Observable<boolean> {
+    // business logic
     if (!this.allowEdit) {
       return true;
     }

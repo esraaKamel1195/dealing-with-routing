@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivateFn,
@@ -9,32 +10,27 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 
-// export class canDeactivateGuard implements CanDeactivate<any> {
-//   canDeactivate(
-//     component: any,
-//     currentRoute: ActivatedRouteSnapshot,
-//     currentState: RouterStateSnapshot,
-//     nextState: RouterStateSnapshot
-//   ): boolean | Promise<boolean> | Observable<boolean> {
-//     return component.canDeactivate();
-//   }
-// }
+// @Injectable({
+//   providedIn: "root",
+// })
 
 export interface CanComponentDeactivate {
   canDeactivate: () => Observable<boolean> | Promise<boolean> | boolean;
 }
 
 export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
-  canDeactivate(
-    component: CanComponentDeactivate
+  canDeactivate (
+    component: CanComponentDeactivate,
+    currentRoute: ActivatedRouteSnapshot,
+    currentState: RouterStateSnapshot,
+    nextState?: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    console.log('Component', component);
-    return component.canDeactivate ? component.canDeactivate(): true;
+    return component.canDeactivate();
   }
 }
 
-// export const canDeactivateGuard: CanDeactivateFn<CanComponentDeactivate> = (
+// export const CanDeactivateGuard: CanDeactivateFn<CanComponentDeactivate> = (
 //   component: CanComponentDeactivate
 // ): Observable<boolean> | Promise<boolean> | boolean => {
-//   return component.deactivate? component.deactivate(): true;
-// };
+//   return component.canDeactivate()? component.canDeactivate(): true;
+// }

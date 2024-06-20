@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IServer } from '../../models/server.model';
 import { ServersService } from '../servers.service';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Data, Params, Router } from '@angular/router';
 
 @Component({
   selector: 'app-individual-server',
@@ -16,19 +16,26 @@ export class IndividualServerComponent implements OnInit {
     private serversService: ServersService,
     private activatedRoute: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.id = this.activatedRoute.snapshot.params['id'];
-    this.server = this.serversService.getServerById(this.id);
+    // this.id = this.activatedRoute.snapshot.params['id'];
+    // this.server = this.serversService.getServerById(this.id);
 
-    this.activatedRoute.params.subscribe((params: Params) => {
-      this.server = this.serversService.getServerById(+params['id']);
+    // this.activatedRoute.params.subscribe((params: Params) => {
+    //   this.server = this.serversService.getServerById(+params['id']);
+    // });
+
+    this.activatedRoute.data.subscribe((data: Data) => {
+      this.server = data['server'];
     });
   }
 
   onEdit() {
-    // this.router.navigate(['edit', {id: 1}]);
-    this.router.navigate(['edit'], { relativeTo: this.activatedRoute });
+    // this.router.navigate(['edit']);
+    this.router.navigate(['edit'], {
+      queryParams: { allowEdit: this.server?.id === 3 ? 1 : 0 },
+      relativeTo: this.activatedRoute,
+    });
   }
 }

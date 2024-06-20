@@ -26,12 +26,12 @@ export class ServersService {
 
   constructor() { }
 
-  getServers() {
+  getServers(): IServer [] {
     return this.servers;
   }
 
-  getServerById(id: number) {
-    const server = this.servers.find((s) => { return s.id == id });
+  getServerById(id: number): IServer {
+    const server: any = this.servers.find((s) => { return s.id == id });
     return server;
   }
 

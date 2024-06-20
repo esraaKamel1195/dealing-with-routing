@@ -11,6 +11,8 @@ import { EditServerComponent } from './servers/edit-server/edit-server.component
 import { IndividualServerComponent } from './servers/individual-server/individual-server.component';
 import { UserComponent } from './users/user/user.component';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
+import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
     HomeComponent,
     EditServerComponent,
     IndividualServerComponent,
-    UserComponent
+    UserComponent,
+    NotFoundPageComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,
